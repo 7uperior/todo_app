@@ -52,7 +52,7 @@ async def create_todo(todo: Todo, db: Session = Depends(get_db)):
 
     db.add(todo_model)
     db.commit()
-    return {"status": 201, "transaction": "Succesful"}
+    seccessful_respone(201)
 
 
 @app.put("/{todo_id}")
@@ -68,7 +68,24 @@ async def update_todo(todo_id: int, todo: Todo, db: Session = Depends(get_db)):
 
     db.add(todo_model)
     db.commit()
-    return {"status": 200, "transaction": "Succesful"}
+    seccessful_respone(200)
+
+
+@app.delete("/{todo_id}")
+async def delete_todo(todo_id: int, db: Session = Depends(get_db)):
+    todo_model = db.query(models.Todos).filter(models.Todos.id == todo_id).first()  # noqa E501
+
+    if todo_model is None:
+        raise http_exception()
+    db.query(models.Todos).filter(models.Todos.id == todo_id).delete()
+
+    db.commit()
+
+    seccessful_respone(200)
+
+
+def seccessful_respone(status_code: int):
+    return {"status": status_code, "transaction": "Successful"}
 
 
 def http_exception():
