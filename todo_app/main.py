@@ -1,7 +1,9 @@
+from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException
 import models
 from database import engine, SessionLoacal
 from sqlalchemy.orm import Session
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
@@ -14,6 +16,17 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+class Todo(BaseModel):
+    title: str
+    description: Optional[str] = None
+    priority: int = Field(
+        gt=0,
+        lt=6,
+        description="The priority must be between 1-5",
+    )
+    complete: bool
 
 
 @app.get("/")
