@@ -42,5 +42,18 @@ async def read_todo(todo_id: int, db: Session = Depends(get_db)):
     raise http_exception()
 
 
+@app.post("/")
+async def create_todo(todo: Todo, db: Session = Depends(get_db)):
+    todo_model = models.Todos()
+    todo_model.title = todo.title
+    todo_model.description = todo.description
+    todo_model.priority = todo.priority
+    todo_model.complete = todo.complete
+
+    db.add(todo_model)
+    db.commit()
+    return {"status": 201, "transaction": "Succesful"}
+
+
 def http_exception():
     return HTTPException(status_code=404, detail="Todo not found")
