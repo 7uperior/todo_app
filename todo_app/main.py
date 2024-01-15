@@ -52,7 +52,7 @@ async def create_todo(todo: Todo, db: Session = Depends(get_db)):
 
     db.add(todo_model)
     db.commit()
-    seccessful_respone(201)
+    return seccessful_respone(201)
 
 
 @app.put("/{todo_id}")
@@ -68,7 +68,7 @@ async def update_todo(todo_id: int, todo: Todo, db: Session = Depends(get_db)):
 
     db.add(todo_model)
     db.commit()
-    seccessful_respone(200)
+    return seccessful_respone(200)
 
 
 @app.delete("/{todo_id}")
@@ -81,7 +81,7 @@ async def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 
     db.commit()
 
-    seccessful_respone(200)
+    return seccessful_respone(200)
 
 
 def seccessful_respone(status_code: int):
